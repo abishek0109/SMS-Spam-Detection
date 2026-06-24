@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Classify SMS messages with trained machine learning models.">
+  <title>SMS Classifier | SMS Spam Detection</title>
+  <link rel="preconnect" href="https://unpkg.com">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="SMS Classifier home">
+      <img src="{{ url_for('static', filename='sms-shield.png') }}" alt="">
+      <span>SMS Classifier</span>
+    </a>
+    <div class="system-status">
+      <span class="status-dot" aria-hidden="true"></span>
+      Models ready
+    </div>
+  </header>
+
+  <main>
+    <section class="workspace" aria-labelledby="page-title">
+      <div class="intro">
+        <p class="eyebrow">SMS CLASSIFIER</p>
+        <h1 id="page-title">Check a message before you trust it.</h1>
+        <p>Analyze message language with two trained traditional machine learning models.</p>
+      </div>
+
+      <div class="classifier-layout">
+        <form class="composer" id="prediction-form">
+          <div class="field-heading">
+            <label for="message">Message content</label>
+            <span id="character-count">0 / 5000</span>
+          </div>
+          <textarea
+            id="message"
+            name="message"
+            maxlength="5000"
+            placeholder="Paste or type an SMS message..."
+            autocomplete="off"
+            required
+          ></textarea>
+
+          <div class="example-row" aria-label="Example messages">
+            <span>Try an example:</span>
+            <button type="button" class="example-button" data-example="Congratulations! You have won a free iPhone. Click now!">Prize offer</button>
+            <button type="button" class="example-button" data-example="Hey, are we still meeting at 6 PM today?">Meeting</button>
+            <button type="button" class="example-button" data-example="URGENT! Your account has been selected for a cash reward. Reply WIN now.">Urgent reward</button>
+          </div>
+
+          <div class="form-controls">
+            <fieldset class="model-picker">
+              <legend>Detection model</legend>
+              <div class="segmented-control">
+                <input type="radio" id="logistic" name="model" value="logistic" checked>
+                <label for="logistic">Logistic Regression</label>
+                <input type="radio" id="naive-bayes" name="model" value="naive_bayes">
+                <label for="naive-bayes">Naive Bayes</label>
+              </div>
+            </fieldset>
+
+            <button class="analyze-button" id="analyze-button" type="submit">
+              <i data-lucide="scan-search" aria-hidden="true"></i>
+              <span>Analyze message</span>
+            </button>
+          </div>
+          <p class="form-error" id="form-error" role="alert"></p>
+        </form>
+
+        <aside class="result-panel idle" id="result-panel" aria-live="polite">
+          <div class="idle-state" id="idle-state">
+            <img src="{{ url_for('static', filename='sms-shield.png') }}" alt="">
+            <h2>Ready to analyze</h2>
+            <p>Your prediction and confidence breakdown will appear here.</p>
+          </div>
+
+          <div class="result-content" id="result-content" hidden>
+            <div class="result-heading">
+              <span class="result-icon" id="result-icon">
+                <i data-lucide="shield-check" aria-hidden="true"></i>
+              </span>
+              <div>
+                <p>CLASSIFICATION</p>
+                <h2 id="result-label">Ham</h2>
+              </div>
+            </div>
+
+            <div class="confidence-block">
+              <div class="confidence-value">
+                <span>Prediction confidence</span>
+                <strong id="confidence-value">0%</strong>
+              </div>
+              <div class="confidence-track" aria-hidden="true">
+                <span id="confidence-fill"></span>
+              </div>
+            </div>
+
+            <dl class="probability-list">
+              <div>
+                <dt>Ham probability</dt>
+                <dd id="ham-probability">0%</dd>
+              </div>
+              <div>
+                <dt>Spam probability</dt>
+                <dd id="spam-probability">0%</dd>
+              </div>
+              <div>
+                <dt>Model</dt>
+                <dd id="model-name">-</dd>
+              </div>
+            </dl>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="history-section" aria-labelledby="history-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">THIS SESSION</p>
+          <h2 id="history-title">Recent checks</h2>
+        </div>
+        <button class="icon-button" id="clear-history" type="button" title="Clear history" aria-label="Clear history">
+          <i data-lucide="trash-2" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <div class="history-empty" id="history-empty">
+        No messages analyzed yet.
+      </div>
+      <div class="history-table-wrap" id="history-table-wrap" hidden>
+        <table>
+          <thead>
+            <tr>
+              <th>Message</th>
+              <th>Result</th>
+              <th>Confidence</th>
+              <th>Model</th>
+            </tr>
+          </thead>
+          <tbody id="history-body"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>Traditional ML inference</span>
+    <span>Runs locally on your trained artifacts</span>
+  </footer>
+
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
