@@ -1,7 +1,8 @@
-streamlit
-pandas
-numpy
-scikit-learn
+
+flask
 joblib
 nltk
-flask
+scikit-learn
+numpy
+pandas
+gunicorn
